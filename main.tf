@@ -20,7 +20,7 @@ resource "azurerm_storage_account" "azurestorage" {
   }
 }
 
-resource "azurerm_storage_blob" "bloob" {
+resource "azurerm_storage_blob" "blooob" {
   name                   = var.index_document
   storage_account_name   = var.storage_account_name
   storage_container_name = "$web"

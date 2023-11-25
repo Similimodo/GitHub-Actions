@@ -3,7 +3,7 @@ name: Azure Terraform Deployment  # Name of the GitHub Actions workflow
 on:  # Specifies the events that trigger the workflow
   push:  # Triggers the workflow on code pushes
     branches:  # Specifies the branches to watch for changes
-      - main  # Modify this branch according to your setup
+      - master  # Modify this branch according to your setup
 
 jobs:  # Defines a set of jobs that execute sequentially or in parallel
   terraform:  # Name of the job
