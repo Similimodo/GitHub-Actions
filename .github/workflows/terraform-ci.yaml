@@ -15,29 +15,26 @@ jobs:  # Defines a set of jobs that execute sequentially or in parallel
         with:
           creds: ${{ secrets.AZURE_SP }}
 
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Checkout repository  # Name of the step/task
         uses: actions/checkout@v2  # Action to check out the code repository
 
-      - name: Set up Terraform  # Name of the step/task
-        uses: hashicorp/setup-terraform@v1  # Action to set up Terraform
-        with:
-          terraform_version: 1.0.0  # Specifies the version of Terraform to use (modify as needed)
+      # - name: Set up Terraform  # Name of the step/task
+      #   uses: hashicorp/setup-terraform@v1  # Action to set up Terraform
+      #   with:
+      #     terraform_version: 1.0.0  # Specifies the version of Terraform to use (modify as needed)
 
-      - name: Initialize Terraform  # Name of the step/task
-        run: terraform init  # Initializes Terraform in the directory
+      # - name: Initialize Terraform  # Name of the step/task
+      #   run: terraform init  # Initializes Terraform in the directory
 
-      - name: Format Terraform  # Name of the step/task
-        run: terraform fmt  # Formats Terraform in the directory
+      # - name: Format Terraform  # Name of the step/task
+      #   run: terraform fmt  # Formats Terraform in the directory
 
-      - name: Validate Terraform configuration  # Name of the step/task
-        run: terraform validate  # Validates the Terraform configuration
+      # - name: Validate Terraform configuration  # Name of the step/task
+      #   run: terraform validate  # Validates the Terraform configuration
 
-      - name: Plan Terraform changes  # Name of the step/task
-        run: terraform plan -out=tfplan  # Creates a Terraform plan and saves it as tfplan file
+      # - name: Plan Terraform changes  # Name of the step/task
+      #   run: terraform plan -out=tfplan  # Creates a Terraform plan and saves it as tfplan file
 
-      - name: Apply Terraform changes  # Name of the step/task
-        run: terraform apply -auto-approve tfplan  # Applies the Terraform changes using the tfplan file for automation
+      # - name: Apply Terraform changes  # Name of the step/task
+      #   run: terraform apply -auto-approve tfplan  # Applies the Terraform changes using the tfplan file for automation
 
