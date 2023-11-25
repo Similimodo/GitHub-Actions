@@ -10,6 +10,14 @@ jobs:  # Defines a set of jobs that execute sequentially or in parallel
     runs-on: ubuntu-latest  # Specifies the runner for this job (in this case, using the latest Ubuntu)
 
     steps:  # Specifies the sequence of tasks in the job
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SP }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Checkout repository  # Name of the step/task
         uses: actions/checkout@v2  # Action to check out the code repository
 
