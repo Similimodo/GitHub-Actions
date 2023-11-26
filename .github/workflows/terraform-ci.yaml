@@ -7,13 +7,20 @@ on:  # Specifies the events that trigger the workflow
 
 jobs:  # Defines a set of jobs that execute sequentially or in parallel
   terraform:  # Name of the job
+    name: "Terraform"
+    env:
+      ARM_CLIENT_ID: ${{ secret.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secret.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secret.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secret.AZURE_AD_TENANT_ID }}
+
     runs-on: ubuntu-latest  # Specifies the runner for this job (in this case, using the latest Ubuntu)
 
     steps:  # Specifies the sequence of tasks in the job
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_SP }}
+      # - name: Azure Login
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_SP }}
 
       - name: Checkout repository  # Name of the step/task
         uses: actions/checkout@v2  # Action to check out the code repository
