@@ -71,5 +71,5 @@ jobs:
     #     tf_actions_args: 'tfplan'
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
-      run: terraform apply "tfplan"
-      working-directory: "."
+      run: terraform apply -auto-approve tfplan
+      working-directory: "."  # Adjust the path if needed
