@@ -1,47 +1,62 @@
-name: Azure Terraform Deployment  # Name of the GitHub Actions workflow
+name: 'Terraform'
 
-on:  # Specifies the events that trigger the workflow
-  push:  # Triggers the workflow on code pushes
-    branches:  # Specifies the branches to watch for changes
-      - master  # Modify this branch according to your setup
+on:
+  push:
+    branches:
+    - main
+  pull_request:
 
-jobs:  # Defines a set of jobs that execute sequentially or in parallel
-  terraform:  # Name of the job
-    # name: "Terraform"
-    # env:
-    #   ARM_CLIENT_ID: ${{ secret.AZURE_AD_CLIENT_ID }}
-    #   ARM_CLIENT_SECRET: ${{ secret.AZURE_AD_CLIENT_SECRET }}
-    #   ARM_SUBSCRIPTION_ID: ${{ secret.AZURE_SUBSCRIPTION_ID }}
-    #   ARM_TENANT_ID: ${{ secret.AZURE_AD_TENANT_ID }}
+jobs:
+  terraform:
+    name: 'Terraform'
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+    runs-on: ubuntu-latest
+    environment: dev
 
-    runs-on: ubuntu-latest  # Specifies the runner for this job (in this case, using the latest Ubuntu)
+    defaults:
+      run:
+        shell: bash
 
-    steps:  # Specifies the sequence of tasks in the job
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_SP }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Checkout repository  # Name of the step/task
-        uses: actions/checkout@v2  # Action to check out the code repository
+    - name: 'Terraform Format'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 0.14.8
+        tf_actions_subcommand: 'fmt'
+        tf_actions_working_dir: "./terraform"
+        
+    - name: 'Terraform Init'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 0.14.8
+        tf_actions_subcommand: 'init'
+        tf_actions_working_dir: "./terraform"
 
-      # - name: Set up Terraform  # Name of the step/task
-      #   uses: hashicorp/setup-terraform@v1  # Action to set up Terraform
-      #   with:
-      #     terraform_version: 1.0.0  # Specifies the version of Terraform to use (modify as needed)
+    - name: 'Terraform Validate'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 0.14.8
+        tf_actions_subcommand: 'validate'
+        tf_actions_working_dir: "./terraform"
+        
+    - name: 'Terraform Plan'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 0.14.8
+        tf_actions_subcommand: 'plan'
+        tf_actions_working_dir: "./terraform"
 
-      # - name: Initialize Terraform  # Name of the step/task
-      #   run: terraform init  # Initializes Terraform in the directory
-
-      # - name: Format Terraform  # Name of the step/task
-      #   run: terraform fmt  # Formats Terraform in the directory
-
-      # - name: Validate Terraform configuration  # Name of the step/task
-      #   run: terraform validate  # Validates the Terraform configuration
-
-      # - name: Plan Terraform changes  # Name of the step/task
-      #   run: terraform plan -out=tfplan  # Creates a Terraform plan and saves it as tfplan file
-
-      # - name: Apply Terraform changes  # Name of the step/task
-      #   run: terraform apply -auto-approve tfplan  # Applies the Terraform changes using the tfplan file for automation
-
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 0.14.8
+        tf_actions_subcommand: 'apply'
+        tf_actions_working_dir: "./terraform"
