@@ -105,11 +105,14 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
-        run: |
-          terraform plan -out=tfplan
-          echo "::set-output name=tfplan::tfplan" # Save the plan name as an output for the subsequent step
+      # - name: Terraform Plan
+      #   run: |
+      #     terraform plan -out=tfplan
+      #     echo "::set-output name=tfplan::tfplan" # Save the plan name as an output for the subsequent step
 
-      - name: Terraform Apply
-        if: success() # Execute apply step only if the plan was successfully generated
-        run: terraform apply --auto-approve tfplan
+      # - name: Terraform Apply
+      #   if: success() # Execute apply step only if the plan was successfully generated
+      #   run: terraform apply --auto-approve tfplan
+
+      - name: Terraform Destroy
+        run: terraform destroy --auto-approve
