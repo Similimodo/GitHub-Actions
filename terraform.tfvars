@@ -1,5 +1,5 @@
 resource_group_location = "eastus"
-resource_group_name     = "rg-terraform"
-storage_account_name    = "tfonorterraform"
+resource_group_name     = "tfstate-rg"
+storage_account_name    = "tfstateonor"
 source_content          = "<h1> Paschal Nnaemeka Onor, my dad is Sir Chris Onor! </h1>"
 index_document          = "index.html"
