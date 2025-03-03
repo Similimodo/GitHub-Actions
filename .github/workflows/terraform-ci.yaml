@@ -1,0 +1,118 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+    runs-on: ubuntu-latest
+    environment: dev
+
+    # defaults:
+    #   run:
+    #     shell: bash
+
+    # steps:
+    # - name: Checkout
+    #   uses: actions/checkout@v2
+
+    # - name: 'Terraform Format'
+    #   uses: hashicorp/terraform-github-actions@master
+    #   with:
+    #     tf_actions_version: 0.14.8
+    #     tf_actions_subcommand: 'fmt'
+    #     tf_actions_working_dir: "."
+        
+    # - name: 'Terraform Init'
+    #   uses: hashicorp/terraform-github-actions@master
+    #   with:
+    #     tf_actions_version: 0.14.8
+    #     tf_actions_subcommand: 'init'
+    #     tf_actions_working_dir: "."
+
+    # - name: 'Terraform Validate'
+    #   uses: hashicorp/terraform-github-actions@master
+    #   with:
+    #     tf_actions_version: 0.14.8
+    #     tf_actions_subcommand: 'validate'
+    #     tf_actions_working_dir: "."
+        
+    # - name: 'Terraform Plan'
+    #   uses: hashicorp/terraform-github-actions@master
+    #   with:
+    #     tf_actions_version: 0.14.8
+    #     tf_actions_subcommand: 'plan'
+    #     tf_actions_working_dir: "."
+    #     args: '-out=tfplan'
+
+    # # - name: Terraform Apply
+    # #   if: github.ref == 'refs/heads/main'
+    # #   uses: hashicorp/terraform-github-actions@master
+    # #   with:
+    # #     tf_actions_version: 0.14.8
+    # #     tf_actions_subcommand: 'apply'
+    # #     tf_actions_working_dir: "."
+    # # - name: Terraform Apply
+    # #   if: github.ref == 'refs/heads/main'
+    # #   uses: hashicorp/terraform-github-actions@master
+    # #   with:
+    # #     tf_actions_version: 0.14.8
+    # #     tf_actions_subcommand: 'apply'
+    # #     tf_actions_working_dir: "."
+    # #     tf_actions_args: 'tfplan'
+    # - name: Terraform Apply
+    #   if: github.ref == 'refs/heads/main'
+    #   run: terraform apply -auto-approve tfplan
+    #   working-directory: "."  # Adjust the path if needed
+
+# name: Terraform Validate, Plan, Apply
+
+# on: [workflow_dispatch]
+
+# defaults:
+#   run:
+#     working-directory: ./your-tf-directory
+
+# jobs:
+#   terraform:
+#     runs-on: ubuntu-latest
+
+    # env:
+    #   ARM_CLIENT_ID: ${{secrets.ARM_CLIENT_ID}}
+    #   ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
+    #   ARM_SUBSCRIPTION_ID: ${{secrets.ARM_SUBSCRIPTION_ID}}
+    #   ARM_TENANT_ID: ${{secrets.ARM_TENANT_ID}}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      # - name: Terraform Plan
+      #   run: |
+      #     terraform plan -out=tfplan
+      #     echo "::set-output name=tfplan::tfplan" # Save the plan name as an output for the subsequent step
+
+      # - name: Terraform Apply
+      #   if: success() # Execute apply step only if the plan was successfully generated
+      #   run: terraform apply --auto-approve tfplan
+
+      - name: Terraform Destroy
+        run: terraform destroy --auto-approve
