@@ -8,7 +8,13 @@ print("")
 
 # Variable is a container of value (str, int, float, boolean)
 first_name = "Bro"
-print(first_name)
+food = "Moringa"
+email = "paschal@fake.com"
+
+print(f"Hello {first_name}")
+print(f"You really like {food}")
+print(f"Your email is {email}")
+
 
 
 print("************************")
