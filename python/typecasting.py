@@ -1,12 +1,15 @@
-arrayA = [2,4,6,8,10,12,14]
-arrayB = [1,3,6,5,7,9,14]
+#!/usr/bin/env python3
 
-def mergeArray (arrA, arrB):
-    return set(arrA + arrB)
+# Typecasting is the process of converting a datatype to another datatype.
+name = "Nwanne"
+age = 37
+gpa = 3.4
+student = True
 
-print(mergeArray(arrayA, arrayB))
+print(type(name))
+print(type(age))
+print(type(gpa))
+print(type(student))
 
-
-# total = set(arrayA + arrayB)
-
-# print(total)
+name = bool(name)
+print(type(name))
