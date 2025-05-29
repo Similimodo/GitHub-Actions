@@ -14,4 +14,3 @@ phone_number = input("Please enter your phone nunber: ")
 print(phone_number.count("-")) # Checks how many times a character appaered in the input. Returns a number
 print(phone_number.replace("-", "")) # replaces a character in the input.
 
-
