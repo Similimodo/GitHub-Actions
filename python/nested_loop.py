@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Nested loop = A loop within another loop (outer and inner)
-#               outer:
-#                   inner:
+#               outer loop:
+#                   inner loop:
 
 
 
