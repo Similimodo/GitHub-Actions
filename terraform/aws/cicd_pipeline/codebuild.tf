@@ -9,12 +9,12 @@ data "aws_partition" "current" {}
 # in the AWS Console (under CodePipeline -> Connections) AFTER 'terraform apply' creates this resource.
 resource "aws_codestarconnections_connection" "github_connection" {
   name          = "my-codebuild-github-connection" # Unique name for your connection
-  provider_type = "GitHub" # Specifies the third-party provider
+  provider_type = "GitHub"                         # Specifies the third-party provider
 }
 
 # --- IAM Role for CodeBuild Project ---
 resource "aws_iam_role" "codebuild" {
-  name               = "BuildProjectRole-${var.aws_account_id}"
+  name               = "BuildProjectRole-${var.aws_account_id}" # Make role name unique
   assume_role_policy = data.aws_iam_policy_document.assume_role_for_codebuild.json
 
   tags = {
@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "codebuild_permissions_document" {
     ]
   }
 
-  # Permissions for S3
+  # Permissions for S3 (if CodeBuild produces artifacts to be stored in S3)
   statement {
     effect = "Allow"
     actions = [
@@ -61,6 +61,9 @@ data "aws_iam_policy_document" "codebuild_permissions_document" {
       "s3:GetBucketAcl",
       "s3:GetBucketLocation",
       "s3:ListBucket",
+      # Added for broader S3 access to resolve common permission issues
+      "s3:ListAllMyBuckets",
+      "s3:GetBucketTagging",
     ]
     resources = ["*"]
   }
@@ -69,13 +72,29 @@ data "aws_iam_policy_document" "codebuild_permissions_document" {
   statement {
     effect = "Allow"
     actions = [
-      "ec2:Describe*",
+      "ec2:*",
+      "ec2:CreateSecurityGroup",
       "dynamodb:*",
       "kms:*",
-      "ssm:GetParameters"
+      "ssm:GetParameters",
+      # ADDED: IAM permissions for CodeBuild role to read its own info
+      "iam:GetRole",
+      "iam:GetRolePolicy",
+      "iam:ListRolePolicies",
+      "iam:ListAttachedRolePolicies",
+      "iam:PassRole", # Often required if CodeBuild passes a role to other services
+      # ADDED: CodeBuild permissions for CodeBuild role to read project info
+      "codebuild:BatchGetProjects",
+      "codebuild:ListProjects",
+      # ADDED: CodeStar Connections permissions for CodeBuild role to read connection info
+      "codestar-connections:GetConnection",
+      "codestar-connections:ListConnections",
+      "codestar-connections:ListInstallationRepositories",
+      "codeconnections:ListTagsForResource"
     ]
-    resources = ["*"]
+    resources = ["*"] # Best practice: Restrict to specific ARNs when possible.
   }
+
 
   # Permissions for the CodeBuild Webhook to interact with GitHub
   statement {
@@ -125,9 +144,8 @@ resource "aws_codebuild_project" "build_project" {
   }
 
   source {
-    # CRITICAL CHANGE: Use CODESTAR_SOURCE_CONNECTION type
-    type     = "GITHUB"
-    location = "https://github.com/Similimodo/similimodo-terraform-webserver.git" # Your GitHub repo URL
+    type                = "GITHUB"
+    location            = "https://github.com/Similimodo/similimodo-terraform-webserver.git" # Your GitHub repo URL
     buildspec           = "buildspec.yaml"
     git_clone_depth     = 1
     report_build_status = true
