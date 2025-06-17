@@ -30,7 +30,7 @@ def print_in_new_line():
 def rows_columns():
     rows = int(input("Enter the number of rows: "))
     columns = int(input("Enter the number of columns: "))
-    symbol = input("Symbol of choice")
+    symbol = input("Symbol of choice: ")
 
     for e in range(rows):
         for f in range(columns):
