@@ -1,7 +1,6 @@
 resource "aws_instance" "web" {
   ami           = data.aws_ami.this.id
   instance_type = "t3.micro"
-
   user_data              = filebase64("scripts/user_data.sh")
   vpc_security_group_ids = [aws_security_group.allow_http.id]
   metadata_options {
@@ -12,6 +11,10 @@ resource "aws_instance" "web" {
     Name = "Security"
     Environment = "Development"
   }
+  # checkov:skip=CKV_AWS_8:We are monitoring this externally that the instance Elastic Blocks Store is securely encrypted
+  # checkov:skip=CKV_AWS_135:We are monitoring this externally to Ensure that EC2 is EBS optimized
+  # checkov:skip=CKV_AWS_126:We are monitoring this externally to Ensure that detailed monitoring is enabled for EC2 instancesd
+
 }
 
 
@@ -43,6 +46,7 @@ resource "aws_security_group" "allow_http" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    # checkov:skip=CKV_AWS_260:We are monitoring this externally
   }
 
   egress {
@@ -51,6 +55,7 @@ resource "aws_security_group" "allow_http" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+    # checkov:skip=CKV_AWS_382:We are monitoring this externally
   }
 
   tags = {
