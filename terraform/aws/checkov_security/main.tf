@@ -4,6 +4,14 @@ resource "aws_instance" "web" {
 
   user_data              = filebase64("scripts/user_data.sh")
   vpc_security_group_ids = [aws_security_group.allow_http.id]
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens = "required"
+  }
+  tags = {
+    Name = "Security"
+    Environment = "Development"
+  }
 }
 
 
@@ -38,6 +46,7 @@ resource "aws_security_group" "allow_http" {
   }
 
   egress {
+    description = "Allow HTTP outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
