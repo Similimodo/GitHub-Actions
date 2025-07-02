@@ -24,8 +24,6 @@ def start_timer_reverse():
 
 
 def digital_timer():
-    print("Starting Timer Now.")
-    print("Starting Timer Now..")
     print("Starting Timer Now...")
 
     
