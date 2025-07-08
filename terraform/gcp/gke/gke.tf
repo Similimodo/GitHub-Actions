@@ -1,7 +1,7 @@
 resource "google_container_cluster" "gke_cluster_demo" {
   name     = "${var.project_id}-my-gke"
   location = var.region
-
+  deletion_protection = false # <--- Set this to false
   remove_default_node_pool = true
   initial_node_count       = 1
 
